@@ -35,8 +35,9 @@ renderWishListByDuration = () =>{
     $("#filterByRating").prop("disabled", true);
     ajaxCall("GET",wishlistApi + "/Duration?duration=" + $("#duration").val(),null,scbShowWishList,ecbShowWishList);
 }
+
   deleteFromWishList=(movieId)=>{
-ajaxCall("DELETE",wishlistApi + "/Delete/MovieId/"+ movieId,null,()=>{Swal.fire({
+ajaxCall("DELETE",wishlistApi + "/Delete/MovieId/"+ movieId ,null,()=>{Swal.fire({
   title: "Removed!" ,
   text: "The movie is removed from the wish list!",
   icon:  "success" ,
@@ -48,6 +49,7 @@ renderWishList()},
   icon:  "Error",
 })})
   }
+
 scbShowWishList = (wishlist) => {
   if (!wishlist || wishlist.length === 0) {
     ecbShowWishList();
@@ -75,7 +77,7 @@ scbShowWishList = (wishlist) => {
                   <i class="fas fa-clock me-1"></i>${movie.duration} min
                 </span>
                 <!-- Delete Button -->
-                <button onclick="deleteFromWishlist(${movie.movieID})" class="btn btn-sm btn-danger ms-auto delete-button" data-id="${movie.id}">
+                <button onclick="deleteFromWishlist(${movie.id})" class="btn btn-sm btn-danger ms-auto delete-button" data-id="${movie.id}">
                   <i class="fas fa-trash-alt me-1"></i>Delete
                 </button>
               </div>
@@ -93,6 +95,7 @@ scbShowWishList = (wishlist) => {
 ecbShowWishList = () => {
   $("#wishListMovies").html("<p>No Movies to show</p>");
 };
+
   addToWishlist = (movieID) => {
     ajaxCall("POST", wishlistApi + "/movieId/" + movieID , null, ()=>{
       $(`#button-${movieID}`).prop("disabled" , true);
