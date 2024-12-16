@@ -36,19 +36,19 @@ renderWishListByDuration = () =>{
     ajaxCall("GET",wishlistApi + "/Duration?duration=" + $("#duration").val(),null,scbShowWishList,ecbShowWishList);
 }
 
-  deleteFromWishList=(movieId)=>{
-ajaxCall("DELETE",wishlistApi + "/Delete/MovieId/"+ movieId ,null,()=>{Swal.fire({
-  title: "Removed!" ,
-  text: "The movie is removed from the wish list!",
-  icon:  "success" ,
-}) 
-renderWishList()},
- ()=>{ Swal.fire({
-  title: "Error!" ,
-  text: "The movie was not removed....",
-  icon:  "Error",
-})})
-  }
+deleteFromWishList=(movieId)=>{
+    ajaxCall("DELETE",wishlistApi + "/Delete/MovieId/"+ movieId ,null,()=>{Swal.fire({
+      title: "Removed!" ,
+      text: "The movie is removed from the wish list!",
+      icon:  "success" ,
+    }) 
+    renderWishList()},
+    ()=>{ Swal.fire({
+      title: "Error!" ,
+      text: "The movie was not removed....",
+      icon:  "error",
+    })}
+)}
 
 scbShowWishList = (wishlist) => {
   if (!wishlist || wishlist.length === 0) {
@@ -77,7 +77,7 @@ scbShowWishList = (wishlist) => {
                   <i class="fas fa-clock me-1"></i>${movie.duration} min
                 </span>
                 <!-- Delete Button -->
-                <button onclick="deleteFromWishlist(${movie.id})" class="btn btn-sm btn-danger ms-auto delete-button" data-id="${movie.id}">
+                <button onclick="deleteFromWishList(${movie.id})" class="btn btn-sm btn-danger ms-auto delete-button" data-id="${movie.id}">
                   <i class="fas fa-trash-alt me-1"></i>Delete
                 </button>
               </div>
