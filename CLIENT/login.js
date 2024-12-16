@@ -1,5 +1,5 @@
-// const userAPI = "https://localhost:7125/api/Users/";
-const userAPI = "https://proj.ruppin.ac.il/bgroup3/test2/tar1/api/Users/";
+const userAPI = "https://localhost:7125/api/Users/";
+// const userAPI = "https://proj.ruppin.ac.il/bgroup3/test2/tar1/api/Users/";
 
 $(document).ready(() => {
 
