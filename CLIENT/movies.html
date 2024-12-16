@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />  
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> 
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="style.css" />
+    <script src="casts.js"></script>
+    <script src="movies.js"></script>
+    <script src="wishlist.js"></script>
+    <title>Movies Website</title>  
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+      <div class="container">   
+        <span class="navbar-brand" id="welcomeMessage"></span>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+          <div class="navbar-nav">
+            <button id="showMovies" class="btn btn-outline-light me-2 mb-2 mb-lg-0">
+              All Movies
+            </button>
+            <button id="showWishlist" class="btn btn-outline-light me-2 mb-2 mb-lg-0">
+              My Wishlist
+            </button>
+            <button id="showCasts" class="btn btn-outline-light me-2 mb-2 mb-lg-0">
+              My Casts
+            </button>
+            <button id="signOutButton" style="display: none;" class="btn btn-outline-light me-2 mb-2 mb-lg-0" >Sign Out</button>
+
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    
+    <div class="container" id="movieDiv">
+      <!-- Movies  -->
+      <div>
+      <button id="addMovie" class="btn btn-outline-light me-2 mb-2 mb-lg-0">Add Movie</button>
+      </br>
+      </br>
+      <div id="loadingIndicator" class="spinner" style="display: none;"></div>
+
+      <div class="row" id="moviesContainer"></div>
+    </div>
+      <!-- Wishlist  -->
+      <div id="wishlistContainer" class="d-none">
+        <!-- Filters -->
+        <div class="row mb-4">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Filter by Rating</label>
+            <div class="input-group">
+              <input
+                type="number"
+                id="rating"
+                class="form-control"
+                placeholder="Minimum rating..."
+              />
+              <button id="filterByRating" class="btn btn-primary">
+                Filter
+              </button>
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Filter by Duration</label>
+            <div class="input-group">
+              <input
+                type="number"
+                id="duration"
+                class="form-control"
+                placeholder="Maximum duration..."
+              />
+              <button id="filterByDuration" class="btn btn-primary">
+                Filter
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- Wishlist Movies -->
+        <h2>My Wishlist</h2>
+        <div
+          class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4"
+          id="wishListMovies"
+        ></div>
+      </div>
+
+      <div class="Container" id="castFormContainer">
+        <div class="row justify-content-center">
+          <div class="col-md-8">
+            <div class="card">
+              <div class="card-body">
+                <h2 class="card-title text-center mb-4">Add New Cast Member</h2>
+
+                <form id="castForm">
+                  <!-- <div class="mb-3">
+                    <label for="id" class="form-label">ID</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="id"
+                      required
+                      pattern="^\d{9}$"
+                      title="ID must be exactly 9 digits."
+                    />
+                  </div> -->
+
+                  <div class="mb-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="name"
+                      required
+                      minlength="3"
+                    />
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="role" class="form-label">Role</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="role"
+                      required
+                    />
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="dateOfBirth" class="form-label"
+                      >Date of Birth</label
+                    >
+                    <input
+                      type="date"
+                      class="form-control"
+                      id="dateOfBirth"
+                      required
+                    />
+                    <div id="dateError" class="invalid-feedback"></div>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="country" class="form-label">Country</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="country"
+                      required
+                      minlength="3"
+                    />
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="photoUrl" class="form-label">Photo URL</label>
+                    <input
+                      type="url"
+                      class="form-control"
+                      id="photoUrl"
+                      required
+                      pattern="^(https?:\/\/.+|data:image\/[a-zA-Z]+;base64,.+)$"
+                      title="Photo must be a valid URL starting with http:// or https://, or a Base64 image"
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    id="submitBTN"
+                    class="btn btn-primary w-100"
+                  >
+                    Add Cast Member
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Casts -->
+        <div id="castsDetails" class="casts-grid"></div>
+      </div>
+    </div>
+<!-- Modal for Adding Movie -->
+<div class="modal fade" id="addMovieModal" tabindex="-1" aria-labelledby="addMovieModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addMovieModalLabel">Add New Movie</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="movieForm" class="form-container">
+          <label for="title">Movie Title</label>
+          <input type="text" id="title" name="title" class="form-control" placeholder="Enter movie title" required minlength="3"><br>
+
+          <label for="rating">Rating</label>
+          <input type="number" id="ratingVal" name="rating" step="0.1" min="0" max="10" class="form-control" placeholder="Enter movie rating" ><br>
+
+          <label for="income">Income</label>
+          <input type="number" id="income" name="income" class="form-control" placeholder="Enter movie income" ><br>
+
+          <label for="releaseYear">Release Year</label>
+          <input type="number" id="releaseYear" name="releaseYear" class="form-control" placeholder="Enter release year" required min="1500" max=`{Date.year()}`><br>
+
+          <label for="duration">Duration (minutes)</label>
+          <input type="number" id="durationMin" name="duration" class="form-control" min="60" max="500" placeholder="Enter movie duration" required><br>
+
+          <label for="language">Language</label>
+          <input type="text" id="language" name="language" class="form-control" placeholder="Enter language" required><br>
+
+          <label for="description">Description</label>
+          <textarea id="description" name="description" class="form-control" rows="4" placeholder="Enter movie description" required></textarea><br>
+
+          <label for="genre">Genre</label>
+          <select id="genre" name="genre" class="form-control" required>
+            <option value="">Select Genre</option>
+            <option value="Drama">Drama</option>
+            <option value="Comedy">Comedy</option>
+            <option value="Action">Action</option>
+            <option value="Horror">Horror</option>
+            <option value="Romance">Romance</option>
+          </select><br>
+
+          <label for="photoUrl">Photo URL</label>
+          <input type="url" id="moviePhotoUrl" name="photoUrl" class="form-control" placeholder="Enter photo URL" required><br>
+
+          <button type="submit" class="btn btn-primary w-100">Add Movie</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+  </body>
+</html>

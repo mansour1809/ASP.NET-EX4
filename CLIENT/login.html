@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        /* General Body Styles */
+        body {
+            background-color: #f4f7fc;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Container for the Login Form */
+        .login-form-container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 320px;
+            text-align: center;
+            margin: auto;
+            margin-top: 30px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Login Heading */
+        .login-h2 {
+            margin-bottom: 20px;
+            font-size: 25px;
+            font-weight: 600;
+            color: #1e40af;
+        }
+        .login-h2::after {
+            content: '';
+            display: block;
+            width: 90px;
+            height: 3px;
+            background-color: #1e40af;
+            margin: 10px auto 0;
+        }
+
+        /* Input Field Styles */
+        .login-form-label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px;
+            text-align: left;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .login-form-input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 18px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border 0.3s ease;
+        }
+
+        .login-form-input:focus {
+            border-color: #1e40af;
+            outline: none;
+        }
+
+        /* Button Styles */
+        .login-btn, .signup-btn {
+            background-color: #1e40af;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            margin:5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .login-btn:hover, .signup-btn:hover {
+            background-color: #153a6e;
+        }
+
+        /* Modal Styles */
+        .modal-content {
+            border-radius: 12px;
+        }
+
+        /* Background Blur (For Movie Page After Login) */
+        .blurred-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://proj.ruppin.ac.il/bgroup3/test2/tar3/backgroundImg/background.png') center center/cover no-repeat;
+            filter: blur(8px);
+            z-index: -1;
+        }
+        .password-container {
+    position: relative;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #888;
+}
+
+    </style>
+    <title>Movie Site - Login</title>
+</head>
+<body>
+    <!-- Background Blur (Visible after login) -->
+    <div class="blurred-background"></div>
+
+    <!-- Login Form Container -->
+    <div class="login-form-container">
+        <h3 >Movie Site</h3>
+        <br>
+        <h3 class="login-h2">Login</h3>
+        <form>
+         <label class="login-form-label" for="username">Username</label>
+         <input class="login-form-input" type="text" id="usernameLogin" name="username" placeholder="Enter your username" required>
+         
+         <label class="login-form-label" for="password">Password</label>
+         <div class="password-container">
+             <input class="login-form-input" type="password" id="passwordLogin" name="password" placeholder="Enter your password" required>
+             <span id="togglePassword" class="toggle-password">
+                 <i class="fas fa-eye"></i>
+             </span>
+         </div>
+         
+         <button type="submit" class="login-btn" id="login-btn">Login</button>
+     </form>
+     
+
+        <!-- Sign-Up Button -->
+        <button class="signup-btn" id="signupButton">Sign Up</button>
+    </div>
+
+    <!-- Modal for Sign-Up -->
+    <div id="signupModal" class="modal fade" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Register</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="registerForm">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username:</label>
+                            <input type="text" id="username" class="form-control" name="username" required>
+                            <div id="userError" class="invalid-feedback" ></div>
+
+                           </div>
+                           <div class="mb-3">
+                            <label for="email" class="form-label">Email:</label>
+                            <input type="email" id="email" class="form-control" name="email" required>
+                        </div>
+                        <div class="mb-3 position-relative">
+                           <label for="password" class="form-label">Password:</label>
+                           <input type="password" id="password" class="form-control" name="password" minlength="6" required>
+                           </span>
+                       </div>
+                       
+                        <button id="registerBtn" type="submit" class="btn btn-primary w-100">Register</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script src="login.js"></script>
+</body>
+</html>
