@@ -35,7 +35,19 @@ renderWishListByDuration = () =>{
     $("#filterByRating").prop("disabled", true);
     ajaxCall("GET",wishlistApi + "/Duration?duration=" + $("#duration").val(),null,scbShowWishList,ecbShowWishList);
 }
-  
+  deleteFromWishList=(movieId)=>{
+ajaxCall("DELETE",wishlistApi + "/Delete/MovieId/"+ movieId,null,()=>{Swal.fire({
+  title: "Removed!" ,
+  text: "The movie is removed from the wish list!",
+  icon:  "success" ,
+}) 
+renderWishList()},
+ ()=>{ Swal.fire({
+  title: "Error!" ,
+  text: "The movie was not removed....",
+  icon:  "Error",
+})})
+  }
 scbShowWishList = (wishlist) => {
   if (!wishlist || wishlist.length === 0) {
     ecbShowWishList();
