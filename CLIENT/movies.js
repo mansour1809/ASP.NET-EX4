@@ -1,5 +1,5 @@
-// const moviesApi = "https://localhost:7125/api/Movies";
-const moviesApi = "https://proj.ruppin.ac.il/bgroup3/test2/tar1/api/Movies";
+const moviesApi = "https://localhost:7125/api/Movies";
+// const moviesApi = "https://proj.ruppin.ac.il/bgroup3/test2/tar1/api/Movies";
 
 $(document).ready(() => {
 
