@@ -1,5 +1,5 @@
-// const castsApi = "https://localhost:7125/api/Casts";
-const castsApi = "https://proj.ruppin.ac.il/bgroup3/test2/tar1/api/Casts";
+const castsApi = "https://localhost:7125/api/Casts";
+// const castsApi = "https://proj.ruppin.ac.il/bgroup3/test2/tar1/api/Casts";
 
 $(document).ready(()=>{
 
