@@ -145,7 +145,7 @@ ecb = () =>{
   Swal.fire({
     icon: "error",
     title: "Error",
-    text: "An error occurred while adding the movie.",
+    text: "An error occurred .",
   });
 
 }
