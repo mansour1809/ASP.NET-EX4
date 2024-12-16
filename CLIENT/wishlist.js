@@ -44,15 +44,15 @@ scbShowWishList = (wishlist) => {
       ${wishlist.map((movie) => `
         <div class="col">
           <div class="card h-100 movie-card">
-          <div class="img-container">
-          <img src="${movie.photoUrl}" alt="${movie.title}">
-        </div>
+            <div class="img-container">
+              <img src="${movie.photoUrl}" alt="${movie.title}">
+            </div>
             <div class="card-body">
               <h5 class="card-title text-primary fw-bold">${movie.title}</h5>
               <p class="card-text text-muted">${movie.description}</p>
             </div>
             <div class="card-footer bg-light">
-              <div class="d-flex gap-2 flex-wrap">
+              <div class="d-flex gap-2 flex-wrap align-items-center">
                 <span class="badge bg-primary">
                   <i class="fas fa-star me-1"></i>Rating: ${movie.rating}
                 </span>
@@ -62,15 +62,19 @@ scbShowWishList = (wishlist) => {
                 <span class="badge bg-info">
                   <i class="fas fa-clock me-1"></i>${movie.duration} min
                 </span>
+                <!-- Delete Button -->
+                <button onclick="deleteFromWishlist(${movie.movieID})" class="btn btn-sm btn-danger ms-auto delete-button" data-id="${movie.id}">
+                  <i class="fas fa-trash-alt me-1"></i>Delete
+                </button>
               </div>
             </div>
           </div>
         </div>
-      `
-        )
-        .join("")}
+      `)
+      .join("")}
     </div>
   `;
+
   $("#wishListMovies").html(wishlistHtml);
 };
 
@@ -87,6 +91,7 @@ ecbShowWishList = () => {
       title: "Added!" ,
       text: "The movie added to the wish list!",
       icon:  "success" ,
-    })}, ecb); 
+    })
+  }, ecb); 
   };
 
