@@ -1,344 +1,255 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
-
-    <title>DataTable Example</title>
-
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
-
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
-	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css">
-
-    <style type="text/css">
-
-        button {
-            margin-left: 10px;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Users</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- DataTables CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #f8f9fa;
+            --border-radius: 8px;
+            --box-shadow: 0 2px 15px rgba(0,0,0,0.1);
         }
 
+        body {
+            background-color: #f4f6f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .table-container {
+            padding: 25px;
+            background-color: #fff;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin: 25px;
+        }
+
+        .page-title {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-weight: 600;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+        }
+
+        #usersTable {
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        #usersTable thead th {
+            background-color: var(--secondary-color);
+            border-bottom: 2px solid #dee2e6;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        #usersTable tbody tr {
+            transition: all 0.3s ease;
+        }
+
+        #usersTable tbody tr:hover {
+            background-color: #f8f9fa;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .btn-view-wishlist {
+            background-color: var(--primary-color);
+            border: none;
+            padding: 5px 15px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-view-wishlist:hover {
+            background-color: #357abd;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .modal-content {
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .modal-header {
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+            padding: 15px 25px;
+        }
+
+        .modal-body {
+            padding: 25px;
+        }
+
+        .wishlist-item {
+            background-color: var(--secondary-color);
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--primary-color);
+            transition: all 0.3s ease;
+        }
+
+        .wishlist-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .wishlist-item-name {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .wishlist-item-date {
+            font-size: 0.85em;
+            color: #6c757d;
+        }
+
+        .dataTables_wrapper .dataTables_filter input {
+            border-radius: 20px;
+            padding: 5px 15px;
+            border: 1px solid #ddd;
+        }
+
+        .dataTables_wrapper .dataTables_length select {
+            border-radius: var(--border-radius);
+            padding: 5px 10px;
+        }
+
+        .badge-status {
+            padding: 5px 10px;
+            border-radius: 12px;
+            font-size: 0.85em;
+        }
     </style>
-
-
-	<script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-	<script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
-    <script src="CLIENT/adminPage.js"></script>
-
-
-    <script>
-
-        // will run when the document is ready
-        $(document).ready(function () {
-
-            // once the document is ready we fetch a list of cars from the server
-            ajaxCall("GET", "../api/cars", "", getSuccess, error);
-            
-            $("#carForm").submit(onSubmitFunc); // wire the submit event to a function called f1
-            $("#editDiv").hide();
-        });
-
-        // wire all the buttons to their functions
-        function buttonEvents() {
-
-            $(document).on("click", ".editBtn", function () {
-                markSelected(this);
-                $("#editDiv").show();
-                $("#editDiv :input").prop("disabled", false); // edit mode: enable all controls in the form
-                populateFields(this.getAttribute('data-carId')); // fill the form fields according to the selected row
-            });
-
-            $(document).on("click", ".viewBtn", function () {
-                markSelected(this);
-                $("#editDiv").show();
-                row.className = 'selected';
-                $("#editDiv :input").attr("disabled", "disabled"); // view mode: disable all controls in the form
-                populateFields(this.getAttribute('data-carId'));
-            });
-
-            $(document).on("click", ".deleteBtn", function () {
-                markSelected(this);
-                var carId = this.getAttribute('data-carId');
-                swal({ // this will open a dialouge 
-                    title: "Are you sure ??",
-                    text: "",
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true
-                })
-                .then(function (willDelete) {
-                    if (willDelete) DeleteCar(carId);
-                    else swal("Not Deleted!");
-                }); 
-            });
-        }
-
-        // mark the selected row
-        function markSelected(btn) {
-            $("#carsTable tr").removeClass("selected"); // remove seleced class from rows that were selected before
-            row = (btn.parentNode).parentNode; // button is in TD which is in Row
-            row.className = 'selected'; // mark as selected
-        }
-
-        // Delete a car from the server
-        function DeleteCar(id) {
-            ajaxCall("DELETE", "../api/cars/" + id, "", deleteSuccess, error);
-        }
-
-        function onSubmitFunc() {
-            let carAfterEdit = {
-                Id: car.Id,
-                Image: car.Image, // for now we do not change the image
-                Manufacturer: $("#manufacturer").val(),
-                Model: $("#model").val(),
-                Year: $("#year").val(),
-                Price: $("#price").val(),
-                Color: $("#color").val(),
-                Hand: $("#hand").val(),
-                Description: $("#description").val(),
-                Automatic: $("#automatic").is(":checked")
-            }
-
-            // update a new Car record to the server
-            ajaxCall("PUT", "../api/cars", JSON.stringify(carAfterEdit), updateSuccess, error);
-            return false;
-        }
-
-        // fill the form fields
-        function populateFields(carId) {
-            car = getCar(carId);
-            $("#manufacturer").val(car.Manufacturer);
-            $("#model").val(car.Model);
-            $("#year").val(car.Year);
-            $("#price").val(car.Price);
-            $("#color").val(car.Color);
-            $("#hand").val(car.Hand);
-            $("#description").val(car.Description);
-            $("#automatic").prop('checked', car.Automatic);
-            $("#image").attr("src", "images/" + car.Image);
-        }
-
-        // get a car according to its Id
-        function getCar(id) {
-            for (i in cars) {
-                if (cars[i].Id == id)
-                    return cars[i];
-            }
-            return null;
-        }
-
-        // success callback function after update
-        function updateSuccess(carsdata) {
-            tbl.clear();
-            redrawTable(tbl, carsdata);
-            buttonEvents();
-            $("#editDiv").hide();
-            swal("Updated Successfuly!", "Great Job", "success");
-        }
-
-        // success callback function after delete
-        function deleteSuccess(carsdata) {
-            tbl.clear();
-            redrawTable(tbl, carsdata);
-            buttonEvents(); // after redrawing the table, we must wire the new buttons
-            $("#editDiv").hide();
-            swal("Deleted Successfuly!", "Great Job", "success");
-        }
-
-        // redraw a datatable with new data
-        function redrawTable(tbl, data) {
-            tbl.clear();
-            for (var i = 0; i < data.length; i++) {
-                tbl.row.add(data[i]);
-            }
-            tbl.draw();
-        }
-
-        // this function is activated in case of a success
-        function getSuccess(carsdata) {
-            cars = carsdata; // keep the cars array in a global variable;
-            try{
-                tbl = $('#carsTable').DataTable({
-                    data: carsdata,
-                    pageLength: 5,
-                    columns: [
-                        {
-                            render: function (data, type, row, meta) {
-                                let dataCar = "data-carId='" + row.Id + "'";
-
-                                editBtn = "<button type='button' class = 'editBtn btn btn-success' " + dataCar + "> Edit </button>";
-                                viewBtn = "<button type='button' class = 'viewBtn btn btn-info' " + dataCar + "> View </button>";
-                                deleteBtn = "<button type='button' class = 'deleteBtn btn btn-danger' " + dataCar + "> Delete </button>";
-                                return editBtn + viewBtn + deleteBtn;
-                            }
-                        },
-                        { data: "Id" },
-                        { data: "Manufacturer" },
-                        { data: "Model" },
-                        { data: "Year" },
-                        { data: "Price" },
-                        { data: "Color" },
-                        { data: "Hand" },
-                        {
-                          data: "Automatic",
-                          render: function (data, type, row, meta) {
-                            if (data == true)
-                                return '<input type="checkbox" checked disabled="disabled" />';
-                            else
-                                return '<input type="checkbox" disabled="disabled"/>';
-                            }
-                        },
-                        {
-                            data: "Description",
-                            visible: false
-                        },
-                        {
-                            data: "Image",
-                            visible: false
-                        }
-                    ],
-                });
-                buttonEvents();
-            }
-
-            catch (err) {
-                alert(err);
-            }
-        }
-
-        // this function is activated in case of a failure
-        function error(err) {
-            swal("Error: " + err );
-        }
-
-    </script>
-
 </head>
 <body>
-
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="#">Car DataTable Example</a>
-            </div>
-        </div>
-    </nav>
-
-    <div class="container">
-        <form id="pForm">
-            <table id="carsTable" class="display nowrap" style="width:100%">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>Id</th>
-                        <th>Manufacturer</th>
-                        <th>Model</th>
-                        <th>Year</th>
-                        <th>Price</th>
-                        <th>Color</th>
-                        <th>Hand</th>
-                        <th>Gear</th>
-                    </tr>
-                </thead>
-            </table>
-
-        </form>
-
-        <div id="editDiv">
-        <form id="carForm">
-        <div class="form-group row">
-        <div class="form-group col-sm-3">
-            <label for="manufacturer"><span class="red-star">★ </span>Manufacturer</label>
-            <input type="text" class="form-control" id="manufacturer" placeholder="Enter the manufacturer name" required>
-        </div>
-
-
-        <div class="form-group col-sm-3">
-            <label for="model"><span class="red-star">★ </span>Model</label>
-            <input type="text" class="form-control" id="model" placeholder="Enter the model name" required>
-        </div>
-
-
-       <div class="form-group col-sm-3">
-            <label for="year"><span class="red-star">★ </span>Year</label>
-            <select id="year" class="form-control" required>
-                <option value="">Choose Year</option>
-                <option value="2019">2019</option>
-                <option value="2018">2018</option>
-                <option value="2017">2017</option>
-                <option value="2016">2016</option>
-            </select>
-        </div>
-
-        <div class="form-group col-sm-3" >
-            <label for="price"><span class="red-star">★ </span>Price</label>
-            <input type="number" class="form-control" id="price" placeholder="Enter the price" required />
-        </div>
-
-
-        </div>
-
-        <div class="form-group row">
-
-
-        <div class="form-group col-sm-3">
-            <label for="color"><span class="red-star">★ </span>Color</label>
-            <select class="form-control" id="color" required>
-              <option value="">Choose Color</option>
-              <option value="White"> White </option>
-              <option value="Blue"> Blue </option>
-              <option value="Black"> Black </option>
-              <option value="Red"> Red </option>
-              <option value="Grey"> Grey </option>
-            </select>
-        </div>
-
-        <div class="form-group col-sm-3">
-            <label for="hand"><span class="red-star">★ </span>Hand</label>
-            <select class="form-control" id="hand" required >
-              <option value="">Choose Hand</option>
-              <option value="1"> 1 </option>
-              <option value="2"> 2 </option>
-              <option value="3"> 3 </option>
-              <option value="4"> 4 </option>
-              <option value="5"> 5 </option>
-            </select>
-        </div>
-
-        <div class="form-group col-sm-3" >
-            <label for="automatic"><span class="red-star">★ </span>Automatic?</label>
-            <input type="checkbox" class="form-control" id="automatic" checked />
-        </div>
-
-       </div>
-        <div class="form-group row">
-            <div class="form-group col-sm-8">
-                <label for="description">Description</label>
-                <textarea rows="6" class="form-control" id="description" placeholder="Enter the description"></textarea>
-            </div>
-
-            <div class="form-group col-sm-4">
-               <img src="images/car.jpg" id="image" />
-            </div>
-
-        </div>  
-            
-       <button type="submit" class="btn btn-primary btn-lg" id="saveBTN">Save</button> 
-
-    </form>
+    <div class="table-container">
+        <h2 class="page-title">User Management</h2>
+        <table id="usersTable" class="table table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Registration Date</th>
+                    <th>Wishlist Items</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>john_doe</td>
+                    <td>john@example.com</td>
+                    <td>2024-01-15</td>
+                    <td><span class="badge bg-primary">3 items</span></td>
+                    <td>
+                        <button class="btn btn-view-wishlist btn-sm text-white" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#wishlistModal"
+                                data-username="john_doe"
+                                data-items='[
+                                    {"name": "iPhone 15 Pro", "date_added": "2024-01-16", "price": "$999"},
+                                    {"name": "MacBook Air M2", "date_added": "2024-01-17", "price": "$1299"},
+                                    {"name": "AirPods Pro", "date_added": "2024-01-18", "price": "$249"}
+                                ]'>
+                            View Wishlist
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>jane_smith</td>
+                    <td>jane@example.com</td>
+                    <td>2024-02-20</td>
+                    <td><span class="badge bg-primary">2 items</span></td>
+                    <td>
+                        <button class="btn btn-view-wishlist btn-sm text-white"
+                                data-bs-toggle="modal" 
+                                data-bs-target="#wishlistModal"
+                                data-username="jane_smith"
+                                data-items='[
+                                    {"name": "Samsung Galaxy S24", "date_added": "2024-02-21", "price": "$899"},
+                                    {"name": "iPad Pro 2024", "date_added": "2024-02-22", "price": "$799"}
+                                ]'>
+                            View Wishlist
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 
+    <!-- Wishlist Modal -->
+    <div class="modal fade" id="wishlistModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Wishlist for <span id="modalUsername"></span></h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="wishlistItems"></div>
+                </div>
+            </div>
+        </div>
     </div>
 
+    <!-- Required Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/dataTables.bootstrap5.min.js"></script>
 
+    <script>
+        $(document).ready(function() {
+            // Initialize DataTable
+            $('#usersTable').DataTable({
+                responsive: true,
+                pageLength: 10,
+                order: [[0, 'asc']],
+                language: {
+                    search: "Search users:",
+                    lengthMenu: "Show _MENU_ users per page",
+                    info: "Showing _START_ to _END_ of _TOTAL_ users"
+                }
+            });
 
-
+            // Handle modal opening
+            $('#wishlistModal').on('show.bs.modal', function (event) {
+                const button = $(event.relatedTarget);
+                const username = button.data('username');
+                const items = button.data('items');
+                
+                const modal = $(this);
+                modal.find('#modalUsername').text(username);
+                
+                const wishlistContainer = modal.find('#wishlistItems');
+                wishlistContainer.empty();
+                
+                items.forEach(item => {
+                    wishlistContainer.append(`
+                        <div class="wishlist-item">
+                            <div class="wishlist-item-name">${item.name}</div>
+                            <div class="wishlist-item-date">
+                                Added on: ${item.date_added} - Price: ${item.price}
+                            </div>
+                        </div>
+                    `);
+                });
+            });
+        });
+    </script>
 </body>
 </html>
