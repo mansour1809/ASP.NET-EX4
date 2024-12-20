@@ -193,6 +193,22 @@
         <div id="castsDetails" class="casts-grid"></div>
       </div>
     </div>
+<!-- Modal for Adding cast to movie -->
+<div class="modal fade" id="movieSearchModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title">Add to Movie</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <select id="movieSelect" class="form-select">
+                <option value="">Search for a movie...</option>
+            </select>
+        </div>
+      </div>
+  </div>
+</div>
 <!-- Modal for Adding Movie -->
 <div class="modal fade" id="addMovieModal" tabindex="-1" aria-labelledby="addMovieModalLabel" aria-hidden="true">
   <div class="modal-dialog">
