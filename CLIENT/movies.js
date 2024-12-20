@@ -65,26 +65,28 @@ renderMovies = (wishlistIds) => {
   $("#moviesContainer").removeClass("d-none");
   $("#addMovie").show();
   let moviesHtml = "";
-  ajaxCall("GET",moviesApi  , null, (movies)=>{
-  movies.forEach((movie) => {
-    const isInWishlist = wishlistIds.includes(movie.id);
+  ajaxCall("GET",moviesApi  , null, (moviesWithCasts)=>{
+    const moviesOnly = moviesWithCasts.map(item => item.movie);
+    localStorage.setItem("movies", JSON.stringify(moviesOnly));    
+    moviesWithCasts.forEach((movieWithC) => {
+    const isInWishlist = wishlistIds.includes(movieWithC.movie.id);
     moviesHtml += `
           <div class="col-lg-3 col-md-4 col-sm-6">
               <div class="card h-100">
-                  <img loading="lazy" src="${movie.photoUrl}" class="card-img-top" alt="${movie.title}  loading="lazy"">
+                  <img loading="lazy" src="${movieWithC.movie.photoUrl}" class="card-img-top" alt="${movieWithC.movie.title}  loading="lazy"">
                   <div class="card-body">
-                      <h5 class="card-title">${movie.title}</h5>
-                      <p class="card-text">${movie.description}</p>
+                      <h5 class="card-title">${movieWithC.movie.title}</h5>
+                      <p class="card-text">${movieWithC.movie.description}</p>
                   </div>
                   <div class="card-footer">
                       <div class="mb-2">
-                          <span class="badge bg-primary">Rating: ${movie.rating}</span>
-                          <span class="badge bg-secondary">Year: ${movie.releaseYear}</span>
-                          <span class="badge bg-info">Duration: ${movie.duration} min</span>
+                          <span class="badge bg-primary">Rating: ${movieWithC.movie.rating}</span>
+                          <span class="badge bg-secondary">Year: ${movieWithC.movie.releaseYear}</span>
+                          <span class="badge bg-info">Duration: ${movieWithC.movie.duration} min</span>
                       </div>
                       <button class="btn btn-primary w-100" 
-                        id="button-${movie.id}" 
-                        onclick="addToWishlist(${movie.id})"
+                        id="button-${movieWithC.movie.id}" 
+                        onclick="addToWishlist(${movieWithC.movie.id})"
                         ${isInWishlist ? "disabled" : ""}>Add to Wishlist</button>
                   </div>
               </div>
