@@ -259,6 +259,30 @@
     </div>
   </div>
 </div>
+<!-- Modal for showing the casts of the movie -->
+<div class="modal fade" id="castModal" tabindex="-1" aria-labelledby="castModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="castModalLabel">Cast List</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <table id="castTable" class="table table-striped table-bordered" style="width:100%">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Role</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Cast data will be dynamically inserted here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
 
   </body>
 </html>
