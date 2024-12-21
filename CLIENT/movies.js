@@ -14,6 +14,13 @@ $('#releaseYear').attr('max',new Date().getFullYear());
 
   $("#castFormContainer").addClass("d-none");
 
+  $('.show-cast-modal').click(()=>{
+    const movieId =$(this).data("movie-id") 
+    console.log(movieId)
+    showCasts(movieId);
+  })
+
+
   if (localStorage.getItem("isLoggedIn") === "true") {
     $("#welcomeMessage").text(`Welcome, ${localStorage.getItem("userName")}!`);
     $("#signOutButton").show(); // Show sign-out button
@@ -26,6 +33,7 @@ $('#releaseYear').attr('max',new Date().getFullYear());
     localStorage.removeItem("userName");
     localStorage.removeItem("id");
     localStorage.removeItem("wishlistIds");
+    localStorage.removeItem("movies");
     window.location.href = "login.html";
   });
 
@@ -55,20 +63,31 @@ checkWishListRenderMovies = ()=>{
 (wishlist)=>{
   const wishlistIds = wishlist.map((movie) => movie.id); 
   localStorage.setItem("wishlistIds", JSON.stringify(wishlistIds));
-  renderMovies(JSON.parse(localStorage.getItem("wishlistIds")) || []);
+  renderMovies();
 }, ecb)}
 
 
-renderMovies = (wishlistIds) => {
+
+renderMovies = () => {
   $("#castFormContainer").addClass("d-none");
   $("#wishlistContainer").addClass("d-none");
   $("#moviesContainer").removeClass("d-none");
   $("#addMovie").show();
+  if ( !localStorage.getItem("movies") || localStorage.getItem("movies") == null ) {
+    ajaxCall("GET",moviesApi  , null, (moviesWithCasts)=>{
+      localStorage.setItem("movies", JSON.stringify(moviesWithCasts));    
+      creatcards(moviesWithCasts);
+    },ecb
+  )}
+    else
+    creatcards(JSON.parse(localStorage.getItem("movies")));
+  
+}
+
+creatcards = (allMovies) =>{
+  let wishlistIds = JSON.parse(localStorage.getItem("wishlistIds") || [])
   let moviesHtml = "";
-  ajaxCall("GET",moviesApi  , null, (moviesWithCasts)=>{
-    const moviesOnly = moviesWithCasts.map(item => item.movie);
-    localStorage.setItem("movies", JSON.stringify(moviesOnly));    
-    moviesWithCasts.forEach((movieWithC) => {
+  allMovies.forEach((movieWithC) => {
     const isInWishlist = wishlistIds.includes(movieWithC.movie.id);
     moviesHtml += `
           <div class="col-lg-3 col-md-4 col-sm-6">
@@ -88,6 +107,15 @@ renderMovies = (wishlistIds) => {
                         id="button-${movieWithC.movie.id}" 
                         onclick="addToWishlist(${movieWithC.movie.id})"
                         ${isInWishlist ? "disabled" : ""}>Add to Wishlist</button>
+
+                       <button 
+                        class="btn btn-secondary w-100 mt-2 show-cast-modal" 
+                        data-movie-id="${movieWithC.movie.id}" 
+                        data-bs-toggle="modal" 
+                        data-bs-target="#castModal">
+                        Show Cast
+                      </button>
+
                   </div>
               </div>
           </div>
@@ -96,7 +124,8 @@ renderMovies = (wishlistIds) => {
 
   $("#moviesContainer").html(moviesHtml);
   hideLoading();
-}, ecb);}
+
+}
 
 addMovie = (e) => {
   e.preventDefault(); 
@@ -150,6 +179,35 @@ ecb = () =>{
     text: "An error occurred .",
   });
 
+}
+
+showCasts=(id)=> {
+  console.log(id)
+
+  const movieId = id || 1;
+  let allMovies = JSON.parse(localStorage.getItem("movies"))
+  const selectedMovie = allMovies.find((movie) => movie.movie.id === movieId);
+  const casts = selectedMovie.casts;
+
+  const tableBody = $("#castTable tbody");
+tableBody.empty();
+
+casts.forEach((actor) => {
+  tableBody.append(`
+    <tr>
+      <td>${actor.name}</td>
+      <td>${actor.role || "Unknown"}</td>
+    </tr>
+  `);
+});
+
+$("#castTable").DataTable({
+  paging: true,
+  searching: true,
+  info: false,
+  lengthChange: false,
+  pageLength: 5,
+});
 }
 
 function ajaxCall(method, api, data, successCB, errorCB) {
