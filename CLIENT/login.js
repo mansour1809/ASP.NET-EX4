@@ -21,6 +21,7 @@ $(document).ready(() => {
     localStorage.removeItem("userName");
     localStorage.removeItem("id");
     localStorage.removeItem("wishlistIds");
+    localStorage.removeItem("movies");
 
     $("#username").on("input", () => {
       $("#userError").hide();
