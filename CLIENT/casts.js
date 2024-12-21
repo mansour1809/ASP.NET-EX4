@@ -59,18 +59,72 @@ submitCasts = (event) => {
                         <p><strong>Date of Birth:</strong> ${cast.dateOfBirth}</p>
                         <p><strong>Country:</strong> ${cast.country}</p>
                     </div>
-                    <button class="add-to-movie-btn" 
-                            data-bs-toggle="modal" 
-                            data-bs-target="#movieSearchModal"
-                            data-cast-id="${cast.id}"
-                            data-cast-name="${cast.name}
-                            onclick="">
-                        Add to Movie
-                    </button>
+                    <button 
+                        class="btn btn-secondary w-100 mt-2 show-cast-modal" 
+                        onclick ="showMovies('${cast.id}')" 
+                        data-bs-toggle="modal" 
+                        data-bs-target="#movieModal">
+                        Add to movie
+                      </button>
                 </div>`;
     $("#castsDetails").append(castElement);
   };
 
+  showMovies = (castId) =>{
+
+      // Destroy existing datatable if it exists - common issuue with datatable
+    if ($.fn.DataTable.isDataTable('#movieTable')) {
+      $('#movieTable').DataTable().destroy();
+  }
+
+      let allMovies = JSON.parse(localStorage.getItem("movies"))
+      const onlyMovies = allMovies.map((movie) => movie.movie);
+      const tableBody = $("#movieTable tbody");
+      tableBody.empty();
+      onlyMovies.forEach((movie) => {
+      tableBody.append(`
+        <tr>
+          <td>${movie.title}</td>
+          <td>${movie.genre || "Unknown"}</td>
+          <td>${movie.releaseYear || "Unknown"}</td>
+          <td><button class="detail-btn detail-btn-info " onclick="updateDB(${movie.id},'${castId}')">Add</button></td>
+        </tr>
+      `);
+    });
+    
+    $("#movieTable").DataTable({
+      paging: true,
+      searching: true,
+      info: false,
+      lengthChange: false,
+      pageLength: 5,
+      
+    });
+    $(".dataTables_filter input").attr("placeholder", "By Title/Genre/Year...");
+    }
+    updateDB=(movieId,castId)=>{
+      ajaxCall("POST",moviesApi+"/MovieId/"+movieId+"/CastId/"+castId ,null,
+      
+        (cast)=>{
+          Swal.fire({
+            title:"The Movie has been updated!" ,
+            text: "The cast added successfully!",
+            icon: "success"
+          });
+          let allMovies = JSON.parse(localStorage.getItem("movies"))
+          const movieIndex = allMovies.findIndex((movie) => movie.movie.id === movieId);
+          if (movieIndex != -1) {
+            allMovies[movieIndex].casts = [...allMovies[movieIndex].casts , cast ]
+            localStorage.setItem("movies" , JSON.stringify(allMovies))    
+          }
+        }
+        ,Swal.fire({
+        icon: "error",
+        title: "Already there!",
+        text:  "This cast already exist.",
+      }))
+
+    }
 
   castecb = () => {
     Swal.fire({
