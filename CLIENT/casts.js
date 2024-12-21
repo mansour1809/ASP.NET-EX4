@@ -3,19 +3,9 @@ const castsApi = "https://localhost:7125/api/Casts";
 
 $(document).ready(()=>{
 
-//   $('#movieSearchModal').on('show.bs.modal', function (event) {
-//     const movies = JSON.parse(localStorage.getItem("movies")) || [];
-    
-//     $('#movieSelect').select2({
-//         data: movies.map(movie => ({
-//             id: movie.id,
-//             text: `${movie.title} (${movie.releaseYear})`
-//         })),
-//         placeholder: 'Search for a movie...',
-//         dropdownParent: $('#movieSearchModal')
-//     });
-// });
-
+$("#addMovie").click(() => {
+    $("#addMovieModal").modal("show");
+  });
   
 
     $("#showCasts").click(() => {
@@ -73,7 +63,8 @@ submitCasts = (event) => {
                             data-bs-toggle="modal" 
                             data-bs-target="#movieSearchModal"
                             data-cast-id="${cast.id}"
-                            data-cast-name="${cast.name}">
+                            data-cast-name="${cast.name}
+                            onclick="">
                         Add to Movie
                     </button>
                 </div>`;
