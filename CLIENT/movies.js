@@ -2,25 +2,6 @@ const moviesApi = "https://localhost:7125/api/Movies";
 // const moviesApi = "https://proj.ruppin.ac.il/bgroup3/test2/tar1/api/Movies";
 
 $(document).ready(() => {
-
-  $('.navbar-nav button').on('click', function () {
-    const $navbarCollapse = $('#navbarNav');
-    if ($navbarCollapse.hasClass('show')) {
-        $navbarCollapse.collapse('hide');
-    }
-  });
-
-$('#releaseYear').attr('max',new Date().getFullYear());
-
-  $("#castFormContainer").addClass("d-none");
-
-  $('.show-cast-modal').click(()=>{
-    const movieId =$(this).data("movie-id") 
-    console.log(movieId)
-    showCasts(movieId);
-  })
-
-
   if (localStorage.getItem("isLoggedIn") === "true") {
     $("#welcomeMessage").text(`Welcome, ${localStorage.getItem("userName")}!`);
     $("#signOutButton").show(); // Show sign-out button
@@ -36,6 +17,16 @@ $('#releaseYear').attr('max',new Date().getFullYear());
     localStorage.removeItem("movies");
     window.location.href = "login.html";
   });
+
+  $('.navbar-nav button').on('click', function () {
+    const $navbarCollapse = $('#navbarNav');
+    if ($navbarCollapse.hasClass('show')) {
+        $navbarCollapse.collapse('hide');
+    }
+  });
+
+  $('#releaseYear').attr('max',new Date().getFullYear());
+  $("#castFormContainer").addClass("d-none");
 
    showLoading= ()=> {
     $("#loadingIndicator").show();
@@ -59,12 +50,15 @@ $('#releaseYear').attr('max',new Date().getFullYear());
 
 checkWishListRenderMovies = ()=>{
   showLoading();
-  ajaxCall("GET",wishlistApi  , null, 
-(wishlist)=>{
-  const wishlistIds = wishlist.map((movie) => movie.id); 
-  localStorage.setItem("wishlistIds", JSON.stringify(wishlistIds));
-  renderMovies();
-}, ecb)}
+  if ( !localStorage.getItem("wishlistIds") || localStorage.getItem("wishlistIds") == null ) {
+    ajaxCall("GET",wishlistApi  , null, (wishlist)=>{
+      const wishlistIds = wishlist.map((movie) => movie.id); 
+      localStorage.setItem("wishlistIds", JSON.stringify(wishlistIds));    
+      renderMovies();
+    },ecb  )}
+    else
+    renderMovies();
+}
 
 
 
@@ -110,7 +104,7 @@ creatcards = (allMovies) =>{
 
                        <button 
                         class="btn btn-secondary w-100 mt-2 show-cast-modal" 
-                        data-movie-id="${movieWithC.movie.id}" 
+                        onclick ="showCasts(${movieWithC.movie.id})" 
                         data-bs-toggle="modal" 
                         data-bs-target="#castModal">
                         Show Cast
@@ -182,21 +176,23 @@ ecb = () =>{
 }
 
 showCasts=(id)=> {
-  console.log(id)
-
-  const movieId = id || 1;
+     // Destroy existing datatable if it exists - common issuue with datatable
+     if ($.fn.DataTable.isDataTable('#castTable')) {
+      $('#castTable').DataTable().destroy();
+  }
+  const movieId = id;
   let allMovies = JSON.parse(localStorage.getItem("movies"))
   const selectedMovie = allMovies.find((movie) => movie.movie.id === movieId);
   const casts = selectedMovie.casts;
-
   const tableBody = $("#castTable tbody");
-tableBody.empty();
+  tableBody.empty();
 
 casts.forEach((actor) => {
   tableBody.append(`
     <tr>
       <td>${actor.name}</td>
       <td>${actor.role || "Unknown"}</td>
+      <td>${actor.country || "Unknown"}</td>
     </tr>
   `);
 });
@@ -208,6 +204,7 @@ $("#castTable").DataTable({
   lengthChange: false,
   pageLength: 5,
 });
+$(".dataTables_filter input").attr("placeholder", "By name or role...");
 }
 
 function ajaxCall(method, api, data, successCB, errorCB) {
