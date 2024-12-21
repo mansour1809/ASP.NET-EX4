@@ -1,4 +1,4 @@
-const wishlistApi = moviesApi + "/WishList"+ "/userId/" + localStorage.getItem("id")
+const wishlistApi = moviesApi + "/Wishlist"+ "/userId/" + localStorage.getItem("id")
 
 $(document).ready(()=>{
 
