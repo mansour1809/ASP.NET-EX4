@@ -1,178 +1,57 @@
-Cars = [
-    {
-        Id : 1000,
-        Model: "3",
-        Manufacturer: "Mazda",
-        Price: 100000,
-        Year: 2017,
-        Hand: 1,
-        Color: "White",
-        Automatic: true,
-        Image: "Car1.jpg",
-        Description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+
+
+
+
+$(document).ready(function() {
+    // Initialize DataTable
+    $('#usersTable').DataTable({
+        responsive: true,
+        pageLength: 10,
+        order: [[0, 'asc']],
+        language: {
+            search: "Search users:",
+            lengthMenu: "Show _MENU_ users per page",
+            info: "Showing _START_ to _END_ of _TOTAL_ users"
+        }
+    });
+
+    // Handle modal opening
+    $('#wishlistModal').on('show.bs.modal', function (event) {
+        const button = $(event.relatedTarget);
+        const username = button.data('username');
+        const items = button.data('items');
         
-    },
-    {
-        Id: 1001,
-        Model: "3",
-        Manufacturer: "Mazda",
-        Price: 90000,
-        Year: 2016,
-        Hand: 2,
-        Color: "White",
-        Automatic: true,
-        Image: "Car3.jpg",
-        Description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
-    },
-    {
-        Id: 1002,
-        Model: "6",
-        Manufacturer: "Mazda",
-        Price: 110000,
-        Year: 2016,
-        Hand: 2,
-        Color: "Black",
-        Automatic: false,
-        Image: "Car2.jpg",
-        Description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
-    },
-    {
-        Id: 1003,
-        Model: "6",
-        Manufacturer: "Mazda",
-        Price: 110000,
-        Year: 2016,
-        Hand: 2,
-        Color: "red",
-        Automatic: false,
-        Image: "Car1.jpg",
-        Description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
-    },
-    {
-        Id: 1004,
-        Model: "Corola",
-        Manufacturer: "Toyota",
-        Price: 110000,
-        Year: 2016,
-        Hand: 3,
-        Color: "White",
-        Automatic: true,
-        Image: "Car3.jpg",
-        Description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
-    },
-    {
-        Id: 1005,
-        Model: "Corola",
-        Manufacturer: "Toyota",
-        Price: 120000,
-        Year: 2017,
-        Hand: 2,
-        Color: "White",
-        Automatic: true,
-        Image: "Car2.jpg",
-        Description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
-    }
-];
-
-
-function ajaxCall(method, api, data, successCB, errorCB) {
-   //$.ajax({
-   //    type: method,
-   //    url: api,
-   //    data: data,
-   //    cache: false,
-   //    contentType: "application/json",
-   //    dataType: "json",
-   //    success: successCB,
-   //    error: errorCB
-   //});
-
-   if (method == "GET" && api == "../api/cars") {
-       successCB(Cars);
-       return;
-   }
-
-   else if (method == "PUT" && api == "../api/cars") {
-       let car = JSON.parse(data);
-       for (var i = 0; i < Cars.length; i++) {
-           if (Cars[i].Id == car.Id) {
-               Cars[i] = car;
-               
-               successCB(Cars);
-               return;
-           }
-       }
-
-       errorCB("did not manage to update the DB");
-   }
-
-
-   else if (method == "POST" && api == "../api/cars") {
-       let car = JSON.parse(data);
-       car.Id = getMaxId(Cars) + 1;
-       Cars.push(car);
-       successCB(Cars);
-       //errorCB("did not manage to insert the new car into the DB");
-   }
-
-   else if (method == "DELETE") {
-       splitArr = api.split('/');
-       let id = splitArr[splitArr.length - 1];
-       temp = [];
-       index = 0;
-       for (var i = 0; i < Cars.length; i++) {
-           if (parseInt(Cars[i].Id) != id) {
-               temp[index] = Cars[i];
-               index++;
-           }
-       }
-       Cars = temp;
-       successCB(Cars);
-   }
-
-
-}
-
-function getMaxId(cars){
-   let max = 0;
-   for (var i = 0; i < cars.length; i++) {
-       if (cars[i].Id > max)
-           max = cars[i].Id;
-   }
-   return max;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        const modal = $(this);
+        modal.find('#modalUsername').text(username);
+        
+        const wishlistContainer = modal.find('#wishlistItems');
+        wishlistContainer.empty();
+        
+        items.forEach(item => {
+            wishlistContainer.append(`
+                <div class="wishlist-item">
+                    <div class="wishlist-item-name">${item.name}</div>
+                    <div class="wishlist-item-date">
+                        Added on: ${item.date_added} - Price: ${item.price}
+                    </div>
+                </div>
+            `);
+        });
+    });
+});
 
 
 
 function ajaxCall(method, api, data, successCB, errorCB) {
     $.ajax({
-        type: method,
-        url: api,
-        data: data,
-        cache: false,
-        contentType: "application/json",
-        dataType: "json",
-        success: successCB,
-        error: errorCB
+      type: method,
+      url: api,
+      data: data,
+      cache: false,
+      contentType: "application/json",
+      dataType: "json",
+      success: successCB,
+      error: errorCB,
     });
-}
+  }
+  
