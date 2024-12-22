@@ -1,6 +1,6 @@
-const userAPI = "https://localhost:7125/api/Users";
+const userAPI = "https://proj.ruppin.ac.il/bgroup3/test2/tar1/api/Users/";
 // const userAPI = "https://proj.ruppin.ac.il/bgroup3/test2/tar1/api/Users/";
-const wishlistApiforCertainUser = "https://localhost:7125/api/Movies" + "/Wishlist"+ "/userId/" 
+const wishlistApiforCertainUser = "https://proj.ruppin.ac.il/bgroup3/test2/tar1/api/Movies" + "/Wishlist"+ "/userId/" 
 
 
 $(document).ready(function () {
@@ -13,34 +13,11 @@ $(document).ready(function () {
     pageLength: 5,
   });
 
-//   // Handle modal opening
-//   $("#wishlistModal").on("show.bs.modal", function (event) {
-//     const button = $(event.relatedTarget);
-//     const username = button.data("username");
-//     const items = button.data("items");
 
-//     const modal = $(this);
-//     modal.find("#modalUsername").text(username);
-
-//     const wishlistContainer = modal.find("#wishlistItems");
-//     wishlistContainer.empty();
-
-//     items.forEach((item) => {
-//       wishlistContainer.append(`
-//                 <div class="wishlist-item">
-//                     <div class="wishlist-item-name">${item.name}</div>
-//                     <div class="wishlist-item-date">
-//                         Added on: ${item.date_added} - Price: ${item.price}
-//                     </div>
-//                 </div>
-//             `);
-//     });
-//   });
   renderUsers();
 });
 
 renderUsers = () => {
-//   showMovies = (castId) => {
     // Destroy existing datatable if it exists - common issuue with datatable
     if ($.fn.DataTable.isDataTable("#usersTable")) {
       $("#usersTable").DataTable().destroy();
@@ -95,12 +72,9 @@ renderUsers = () => {
             } else {
                 $("#wishlistItems").append(`<p>No items in wishlist.</p>`);
             }
-      
-            // Show the modal
             $("#wishlistModal").modal("show");
           },
           () => {
-            // Error callback
             Swal.fire({
               title: "Error",
               text: "Could not retrieve the wishlist for the selected user.",
