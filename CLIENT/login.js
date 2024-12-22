@@ -2,6 +2,7 @@ const userAPI = "https://localhost:7125/api/Users/";
 // const userAPI = "https://proj.ruppin.ac.il/bgroup3/test2/tar1/api/Users/";
 
 $(document).ready(() => {
+  
 
   $("#togglePassword").on("click", function () {
     const passwordInput = $("#passwordLogin");
@@ -17,11 +18,7 @@ $(document).ready(() => {
 });
 
 
-  localStorage.removeItem("isLoggedIn");
-    localStorage.removeItem("userName");
-    localStorage.removeItem("id");
-    localStorage.removeItem("wishlistIds");
-    localStorage.removeItem("movies");
+  localStorage.clear();
 
     $("#username").on("input", () => {
       $("#userError").hide();
