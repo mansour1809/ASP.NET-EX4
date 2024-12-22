@@ -102,7 +102,9 @@ submitCasts = (event) => {
     });
     $(".dataTables_filter input").attr("placeholder", "By Title/Genre/Year...");
     }
+    
     updateDB=(movieId,castId)=>{
+
       ajaxCall("POST",moviesApi+"/MovieId/"+movieId+"/CastId/"+castId ,null,
       
         (cast)=>{
