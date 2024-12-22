@@ -7,9 +7,26 @@ namespace HW1.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
+
+        [HttpGet]
+        public IActionResult Get()
+        {
+            try
+            {
+                List<WebUser> users = WebUser.GetAllUsers();
+                return (users == null || !users.Any()) ? NotFound("No users found.") : Ok(users);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+
+
         // POST: api/Users/login
         [HttpPost("login")]
-        public IActionResult Login([FromBody] User user)
+        public IActionResult Login([FromBody] WebUser user)
         {
             if (user.UserName == null || user.Password == null)
             {
@@ -17,7 +34,7 @@ namespace HW1.Controllers
             }
             try
             {
-               // User user = new User { UserName = loginRequest.UserName, Password = loginRequest.Password };
+                // User user = new User { UserName = loginRequest.UserName, Password = loginRequest.Password };
 
                 int isSuccess = user.LoginUser();
                 user.Id = isSuccess;
@@ -33,7 +50,7 @@ namespace HW1.Controllers
 
         // POST: api/Users/register
         [HttpPost("register")]
-        public IActionResult Register([FromBody] User user)
+        public IActionResult Register([FromBody] WebUser user)
         {
             try
             {
