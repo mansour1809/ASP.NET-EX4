@@ -2,20 +2,19 @@
 
 namespace HW1.BL
 {
-    public class User
+    public class WebUser
     {
-
-            int id;
-            string userName;
-            string email;
-            string password;
+         int id;
+         string userName;
+         string email;
+         string password;
 
         public int Id { get => id; set => id = value; }
         public string UserName { get => userName; set => userName = value; }
         public string Email { get => email; set => email = value; }
         public string Password { get => password; set => password = value; }
 
-        public User()
+        public WebUser()
         {}
 
         //regestration
@@ -46,10 +45,10 @@ namespace HW1.BL
             }
         }
 
-
-
-
-
-
+        static public List<WebUser> GetAllUsers()
+        {
+            DBService dB = new DBService();
+            return dB.GetAllUsers();
+        }
     }
 }
