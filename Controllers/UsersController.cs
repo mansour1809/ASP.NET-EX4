@@ -34,8 +34,6 @@ namespace HW1.Controllers
             }
             try
             {
-                // User user = new User { UserName = loginRequest.UserName, Password = loginRequest.Password };
-
                 int isSuccess = user.LoginUser();
                 user.Id = isSuccess;
                 return isSuccess == -1
