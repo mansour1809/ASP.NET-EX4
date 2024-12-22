@@ -266,11 +266,6 @@ namespace HW1.DAL
         }
 
 
-
-
-
-
-
         public List<Movie> ReadWishlist(string sp, int userId)
         {
             SqlConnection con;
@@ -489,7 +484,7 @@ namespace HW1.DAL
         }
 
 
-        public bool InsertUser(User u)// 
+        public bool InsertUser(WebUser u)// 
         {
             SqlConnection con;
             SqlCommand cmd;
@@ -723,6 +718,60 @@ namespace HW1.DAL
                     con.Close();
                 }
             }
+        }
+
+
+
+        public List<WebUser> GetAllUsers()
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("myProjDB"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+
+
+            cmd = CreateCommandWithStoredProcedureGeneral("sp_ReturnUsers", con, null); // create the command
+
+            try
+            {
+
+                SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                List<WebUser> users = new List<WebUser>();
+
+                while (dataReader.Read())
+                {
+                    WebUser u = new WebUser();
+                    u.Id =Convert.ToInt32(dataReader["ID"].ToString());
+                    u.UserName = dataReader["UserName"].ToString();
+                    u.Email = dataReader["Email"].ToString();
+                    u.Password= dataReader["Password"].ToString();
+                    users.Add(u);
+                }
+                return users;
+
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    // close the db connection
+                    con.Close();
+                }
+            }
+
         }
 
     }
