@@ -4,7 +4,7 @@ const moviesApi = "https://proj.ruppin.ac.il/bgroup3/test2/tar1/api/Movies";
 $(document).ready(() => {
 
   if(localStorage.getItem("userName") === "admin")
-    $('.navbar-nav').append(`<button id="usersInfo" class="btn btn-outline-light me-2 mb-2 mb-lg-0">
+    $('.navbar-nav').prepend(`<button id="usersInfo" class="btn btn-outline-light me-2 mb-2 mb-lg-0">
         Users info
       </button>`);
     
