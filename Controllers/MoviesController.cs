@@ -68,7 +68,7 @@ namespace HW1.Controllers
         }
         //Delete from the wishlist
 
-        [HttpDelete("/Wishlist/userId/{userId}/Delete/MovieId/{movieId}")]
+        [HttpDelete("Wishlist/userId/{userId}/Delete/MovieId/{movieId}")]
         public IActionResult RemoveFromWishlist(int userId, int movieId)
         {
 
