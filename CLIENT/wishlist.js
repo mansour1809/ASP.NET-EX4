@@ -37,11 +37,17 @@ renderWishListByDuration = () =>{
 }
 
 deleteFromWishList=(movieId)=>{
-    ajaxCall("DELETE",wishlistApi + "/Delete/MovieId/"+ movieId ,null,()=>{Swal.fire({
+
+    ajaxCall("DELETE",wishlistApi + "/Delete/MovieId/"+ movieId ,null,()=>{
+      let wishlistIds = JSON.parse(localStorage.getItem("wishlistIds")) || [];
+      wishlistIds = wishlistIds.filter(id => id !== movieId); 
+      localStorage.setItem("wishlistIds", JSON.stringify(wishlistIds));
+      Swal.fire({
       title: "Removed!" ,
       text: "The movie is removed from the wish list!",
       icon:  "success" ,
     }) 
+    
     renderWishList()},
     ()=>{ Swal.fire({
       title: "Error!" ,
